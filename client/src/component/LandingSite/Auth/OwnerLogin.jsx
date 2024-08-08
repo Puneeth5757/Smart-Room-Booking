@@ -1,19 +1,36 @@
 import { useState } from "react";
 import { Container, Form, Button } from "react-bootstrap";
+import { auth, googleProvider, signInWithPopup } from '../../../firebase';
+import axios from "axios";
 
-const Login = () => {
+const OwnerLogin = () => {
   const [email, setEmail] = useState("");
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    // Handle login logic here
-    console.log("Email:", email);
+  const handleGoogleSignIn = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const owner = result.user;
+      
+
+      await axios.post("http://localhost:3000/api/owners/login", {
+        uid: owner.uid,
+        ownername: owner.displayName,
+        email: owner.email,
+        phone: '',  
+        role: 'owner'
+      });
+
+      alert("Signed in successfully");
+    } catch (error) {
+      console.error("Error signing in with Google:", error);
+      alert("Error signing in with Google: " + error.message);
+    }
   };
 
   return (
     <Container className="d-flex flex-column align-items-center justify-content-center vh-100">
-      <h2 className="mb-4">Welcome back</h2>
-      <Form onSubmit={handleLogin} className="w-50">
+      <h2 className="mb-4">Welcome back, Owner</h2>
+      <Form className="w-50">
         <div className="mb-3">
           <label htmlFor="formBasicEmail" className="form-label">
             Email address
@@ -34,11 +51,11 @@ const Login = () => {
         </Button>
 
         <div className="text-center">
-          Dont have an account? <a href="/owner-register">Sign Up</a>
+          Don-t have an account? <a href="/owner-register">Sign Up</a>
         </div>
         <br />
 
-        <Button variant="outline-primary" className="w-100 mb-2">
+        <Button variant="outline-primary" className="w-100 mb-2" onClick={handleGoogleSignIn}>
           <i className="fab fa-google"></i> Continue with Google
         </Button>
       </Form>
@@ -46,4 +63,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default OwnerLogin;

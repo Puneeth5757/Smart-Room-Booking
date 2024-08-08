@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { Container, Form, Button } from "react-bootstrap";
+// import { auth, googleProvider, createUserWithEmailAndPassword, signInWithPopup } from '../../../firebase';
 import axios from "axios";
 
 const SignUp = () => {
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
@@ -16,23 +19,53 @@ const SignUp = () => {
     }
 
     try {
-      await axios.post("http://localhost:5000/api/auth/register", {
+      await axios.post("", {
+        username,
         email,
+        phone,
         password,
       });
       alert("User registered successfully");
-      // Redirect or update UI as needed
     } catch (err) {
       setError("Error registering user");
       console.error("Error:", err);
     }
+
+
   };
+
+  // const handleGoogleSignIn = async () => {
+  //   try {
+  //     const result = await signInWithPopup(auth, googleProvider);
+  //     console.log("User signed in with Google:", result.user);
+  //     alert("Signed in Successfully");
+  //   } catch (error) {
+  //     console.error("Error signing in with Google:", error);
+  //     alert("Error signing in with Google: " + error.message);
+  //   }
+  // };
+
 
   return (
     <Container className="d-flex flex-column align-items-center justify-content-center vh-100">
       <h2 className="mb-4">Create User Account</h2>
       <Form onSubmit={handleSignUp} className="w-50">
         {error && <div className="alert alert-danger mb-3">{error}</div>}
+
+        <div className="mb-3 px-5">
+          <label htmlFor="formBasicUsername" className="form-label">
+            Username
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="formBasicUsername"
+            placeholder="Enter username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+        </div>
 
         <div className="mb-3 px-5">
           <label htmlFor="formBasicEmail" className="form-label">
@@ -45,6 +78,21 @@ const SignUp = () => {
             placeholder="Enter email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="mb-3 px-5">
+          <label htmlFor="formBasicPhone" className="form-label">
+            Phone Number
+          </label>
+          <input
+            type="tel"
+            className="form-control"
+            id="formBasicPhone"
+            placeholder="Enter phone number"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
             required
           />
         </div>
@@ -88,7 +136,7 @@ const SignUp = () => {
         </div>
         <br />
 
-        <Button variant="outline-primary" className="w-100 mb-2">
+        <Button variant="outline-primary" className="w-100 mb-2" >
           <i className="fab fa-google"></i> Continue with Google
         </Button>
       </Form>

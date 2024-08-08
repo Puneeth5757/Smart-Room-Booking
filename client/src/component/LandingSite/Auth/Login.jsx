@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Container, Form, Button } from "react-bootstrap";
+import { auth, googleProvider, createUserWithEmailAndPassword, signInWithPopup } from '../../../firebase';
 import axios from "axios";
 
 const Login = () => {
@@ -20,6 +21,26 @@ const Login = () => {
     } catch (err) {
       setError("Error logging in");
       console.error("Error:", err);
+    }
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      console.log("User signed up:", userCredential.user);
+      // You can redirect the user or display a success message here
+    } catch (error) {
+      console.error("Error signing up:", error);
+      alert("Error signing up: " + error.message);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      console.log("User signed in with Google:", result.user);
+      alert("Signed in Successfully");
+    } catch (error) {
+      console.error("Error signing in with Google:", error);
+      alert("Error signing in with Google: " + error.message);
     }
   };
 
@@ -69,7 +90,7 @@ const Login = () => {
         
         <br />
 
-        <Button variant="outline-primary" className="w-100 mb-2">
+        <Button variant="outline-primary" className="w-100 mb-2" onClick={handleGoogleSignIn}>
           <i className="fab fa-google"></i> Continue with Google
         </Button>
       </Form>
