@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Container, Form, Button } from "react-bootstrap";
-import { auth, googleProvider, createUserWithEmailAndPassword, signInWithPopup } from '../../../firebase';
+import { userAuth, userGoogleProvider, createUserWithEmailAndPassword, signInWithPopup } from '../../../user-firebase';
 import axios from "axios";
 
 const Login = () => {
@@ -24,7 +24,7 @@ const Login = () => {
     }
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(userAuth, email, password);
       console.log("User signed up:", userCredential.user);
       // You can redirect the user or display a success message here
     } catch (error) {
@@ -35,15 +35,25 @@ const Login = () => {
 
   const handleGoogleSignIn = async () => {
     try {
-      const result = await signInWithPopup(auth, googleProvider);
-      console.log("User signed in with Google:", result.user);
-      alert("Signed in Successfully");
+      const result = await signInWithPopup(userAuth , userGoogleProvider);
+      const user = result.user;
+      // console.log(user);
+
+
+      await axios.post("http://localhost:3000/api/users/login", {
+        uid: user.uid,
+        username: user.displayName ,
+        email: user.email,
+        phone: '', 
+        role: 'user'
+      });
+
+      alert("Signed in successfully");
     } catch (error) {
       console.error("Error signing in with Google:", error);
       alert("Error signing in with Google: " + error.message);
     }
   };
-
   return (
     <Container className="d-flex flex-column align-items-center justify-content-center vh-100">
       <h2 className="mb-4">Welcome Back</h2>

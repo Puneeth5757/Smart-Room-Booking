@@ -21,7 +21,7 @@ const OwnerSignUp = () => {
         uid: owner.uid,
         ownername: owner.displayName || ownername,
         email: owner.email,
-        phone: '',  // Optional, you can add a separate form for phone number
+        phone: '', 
         role: 'owner'
       });
 

@@ -8,7 +8,7 @@ const port = 3000;
 app.use(cors());
 app.use(express.json());
 
-// app.use("/api/users", require("./routes/usersRouter"));
+app.use("/api/users", require("./routes/usersRouter"));
 app.use("/api/owners", require("./routes/ownersRouter"));
 
 app.listen(port,()=>{

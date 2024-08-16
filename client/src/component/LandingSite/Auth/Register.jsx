@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Container, Form, Button } from "react-bootstrap";
-// import { auth, googleProvider, createUserWithEmailAndPassword, signInWithPopup } from '../../../firebase';
+import { userAuth , userGoogleProvider, signInWithPopup } from '../../../user-firebase';
 import axios from "axios";
 
 const SignUp = () => {
@@ -30,22 +30,29 @@ const SignUp = () => {
       setError("Error registering user");
       console.error("Error:", err);
     }
-
-
   };
 
-  // const handleGoogleSignIn = async () => {
-  //   try {
-  //     const result = await signInWithPopup(auth, googleProvider);
-  //     console.log("User signed in with Google:", result.user);
-  //     alert("Signed in Successfully");
-  //   } catch (error) {
-  //     console.error("Error signing in with Google:", error);
-  //     alert("Error signing in with Google: " + error.message);
-  //   }
-  // };
+  const handleGoogleSignIn = async () => {
+    try {
+      const result = await signInWithPopup(userAuth , userGoogleProvider);
+      const user = result.user;
+      // console.log(user);
 
 
+      await axios.post("http://localhost:3000/api/users/login", {
+        uid: user.uid,
+        username: user.displayName ,
+        email: user.email,
+        phone: '', 
+        role: 'user'
+      });
+
+      alert("Signed in successfully");
+    } catch (error) {
+      console.error("Error signing in with Google:", error);
+      alert("Error signing in with Google: " + error.message);
+    }
+  };
   return (
     <Container className="d-flex flex-column align-items-center justify-content-center vh-100">
       <h2 className="mb-4">Create User Account</h2>
@@ -136,7 +143,8 @@ const SignUp = () => {
         </div>
         <br />
 
-        <Button variant="outline-primary" className="w-100 mb-2" >
+  
+  <Button variant="outline-primary" className="w-100 mb-2" onClick={handleGoogleSignIn}  >
           <i className="fab fa-google"></i> Continue with Google
         </Button>
       </Form>
