@@ -8,6 +8,8 @@ const port = 3000;
 app.use(cors());
 app.use(express.json());
 
+app.use("/api/g-users", require("./routes/google-userRouter"));
+app.use("/api/g-owners", require("./routes/google-ownerRouter"));
 app.use("/api/users", require("./routes/usersRouter"));
 app.use("/api/owners", require("./routes/ownersRouter"));
 

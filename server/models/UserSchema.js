@@ -1,12 +1,69 @@
-const mongoose = require('mongoose');
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
+const validator = require("validator");
+const keysecret = "Puneeth@891011121314151617181920"
 
 const userSchema = new mongoose.Schema({
-  uid: { type: String, required: true, unique: true }, // Firebase UID
-  username: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  phone: { type: String },
-  role: { type: String, enum: ['user', 'owner'], required: true },
-  createdAt: { type: Date, default: Date.now }
+    username: {
+        type: String,
+        required: true,
+        unique : true
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    phone: {
+        type: Number,
+        required: true,
+    },
+    password: {
+        type: String,
+        required: true,
+        minlength: 6
+    },
+    cpassword: {
+        type: String,
+        required: true,
+        minlength: 6
+    },
+    tokens: [
+        {
+            token: {
+                type: String,
+                required: true,
+            }
+        }
+    ]
 });
 
-module.exports = mongoose.model('user', userSchema);
+// hash password
+
+userSchema.pre("save", async function (next) {
+
+    if (this.isModified("password")) {
+        this.password = await bcrypt.hash(this.password, 12);
+        this.cpassword = await bcrypt.hash(this.cpassword, 12);
+    }
+    next()
+});
+
+// token generate
+userSchema.methods.generateAuthtoken = async function () {
+    try {
+        let token23 = jwt.sign({ _id: this._id }, keysecret, {
+            expiresIn: "1d"
+        });
+
+        this.tokens = this.tokens.concat({ token: token23 });
+        await this.save();
+        return token23;
+
+    } catch (error) {
+        res.status(422).json(error)
+    }
+}
+
+module.exports =  mongoose.model("users", userSchema);

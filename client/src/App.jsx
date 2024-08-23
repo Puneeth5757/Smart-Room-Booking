@@ -7,7 +7,9 @@ import Login from "./component/LandingSite/Auth/Login";
 import OwnerRegister from "./component/LandingSite/Auth/OwnerRegister";
 import OwnerLogin from "./component/LandingSite/Auth/OwnerLogin";
 import RoomsPage from "./component/Rooms/RoomsPage";
-import Dashboard from "./component/Owners/Dashboard"
+import OwnerDash from "./component/Owners/Dashboard"
+import RoomDash from "./component/Rooms/Dashboard"
+import RoomRegister from "./component/Owners/RoomRegister"
 import Error from "./component/LandingSite/Auth/Error";
 
 
@@ -20,11 +22,18 @@ function App() {
         <Route path="login" element={<Login />} />
         <Route path="owner-register" element={<OwnerRegister />} />
         <Route path="owner-login" element={<OwnerLogin />} />
-        <Route path="rooms" element={<RoomsPage />} />
-        <Route path="owner-dashboard" element={<Dashboard />} />
         <Route path="*" element={<Error />} />
       </Route>
-    </Routes>
+
+      <Route path="ownerdash" element={<OwnerDash />}>
+        <Route index element={<RoomRegister />} />
+      </Route>
+
+      <Route path="dashboard" element={<RoomDash />}>
+        <Route index element={<RoomsPage />} />
+      </Route>
+
+    </Routes>   
   );
 }
 
