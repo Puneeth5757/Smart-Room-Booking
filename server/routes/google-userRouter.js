@@ -2,17 +2,19 @@ const express = require('express');
 const router = express.Router();
 const user = require('../models/google-userSchema');
 
-// Register users
 router.post('/login', async (req, res) => {
   const { uid, username, email, phone, role } = req.body;
 
   try {
-    const existingUser = await user.findOne({ uid });
+   
+    let existingUser = await user.findOne({ uid });
+
+    // If user already exists, allow them to log in
     if (existingUser) {
-      return res.status(400).json({ message: 'User already registered' });
+      return res.status(200).json({ message: 'User logged in successfully', user: existingUser });
     }
 
-    // Create new owner
+    // If user does not exist, create a new user
     const newUser = new user({
       uid,
       username,
@@ -21,15 +23,13 @@ router.post('/login', async (req, res) => {
       role
     });
 
-    // Save new owner to the database
+    // Save new user to the database
     await newUser.save();
-    res.status(201).json({ message: `${role} registered successfully` });
+    res.status(201).json({ message: 'User registered successfully', user: newUser });
   } catch (err) {
-    console.error('Error:', err.message); 
-    res.status(500).json({ error: 'Error registering user' });
+    console.error('Error:', err.message);
+    res.status(500).json({ error: 'Error registering or logging in user' });
   }
 });
-
-
 
 module.exports = router;

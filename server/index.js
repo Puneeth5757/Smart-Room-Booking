@@ -8,10 +8,14 @@ const port = 3000;
 app.use(cors());
 app.use(express.json());
 
+// Serve static files from 'uploads' (for photo access)
+app.use('/uploads', express.static('uploads'));
+
 app.use("/api/g-users", require("./routes/google-userRouter"));
 app.use("/api/g-owners", require("./routes/google-ownerRouter"));
 app.use("/api/users", require("./routes/usersRouter"));
 app.use("/api/owners", require("./routes/ownersRouter"));
+app.use("/api/rooms", require("./routes/roomsRouter"));
 
 app.listen(port,()=>{
     console.log(`server start at port no : ${port}`);

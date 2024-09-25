@@ -111,6 +111,8 @@ const OwnerSignUp = () => {
       });
 
       alert("Signed in successfully");
+      history("/ownerdash");
+      
     } catch (error) {
       console.error("Error signing in with Google:", error);
       alert("Error signing in with Google: " + error.message);
@@ -211,7 +213,7 @@ const OwnerSignUp = () => {
         </Button>
 
         <div className="text-center">
-          Do you have an account? <NavLink to="/owner-login">Sign Up</NavLink>
+          Do you have an account? <NavLink to="/owner-login">Sign in</NavLink>
           {/* <a href="/owner-login">Login</a> */}
         </div>
         <br />

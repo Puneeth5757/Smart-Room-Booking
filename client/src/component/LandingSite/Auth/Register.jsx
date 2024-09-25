@@ -193,7 +193,7 @@ const SignUp = () => {
         </Button>
 
         <div className="text-center px-5">
-          Already have an account? <NavLink to="/login">Sign Up</NavLink>
+          Already have an account? <NavLink to="/login">Sign in</NavLink>
           {/* <a href="/login">Login</a> */}
         </div>
         <br />
