@@ -1,7 +1,5 @@
-// OwnerDashboard.js
 import { useState } from 'react';
 import axios from 'axios';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 const OwnerDashboard = () => {
   const [roomName, setRoomName] = useState('');
@@ -10,6 +8,8 @@ const OwnerDashboard = () => {
   const [availableDate, setAvailableDate] = useState('');
   const [amenities, setAmenities] = useState('');
   const [photo, setPhoto] = useState(null);
+  const [roomType, setRoomType] = useState('');
+  const [numOfBeds, setNumOfBeds] = useState('');
 
   const handleRoomRegistration = async (e) => {
     e.preventDefault();
@@ -21,6 +21,8 @@ const OwnerDashboard = () => {
     formData.append('availableDate', availableDate);
     formData.append('amenities', amenities);
     formData.append('photo', photo);
+    formData.append('type', roomType);
+    formData.append('beds', numOfBeds);
 
     try {
       const response = await axios.post('http://localhost:3000/api/rooms', formData, {
@@ -37,6 +39,8 @@ const OwnerDashboard = () => {
       setAvailableDate('');
       setAmenities('');
       setPhoto(null);
+      setRoomType('');
+      setNumOfBeds('');
     } catch (error) {
       console.error(error);
       alert('Room registration failed');
@@ -84,6 +88,30 @@ const OwnerDashboard = () => {
             className="form-control"
             value={availableDate}
             onChange={(e) => setAvailableDate(e.target.value)}
+            required
+          />
+        </div>
+        <div className="col-md-6">
+          <label className="form-label">Room Type</label>
+          <select
+            className="form-select"
+            value={roomType}
+            onChange={(e) => setRoomType(e.target.value)}
+            required
+          >
+            <option value="">Select Room Type</option>
+            <option value="King">King</option>
+            <option value="Queen">Queen</option>
+            <option value="Double">Double</option>
+          </select>
+        </div>
+        <div className="col-md-6">
+          <label className="form-label">Number of Beds</label>
+          <input
+            type="number"
+            className="form-control"
+            value={numOfBeds}
+            onChange={(e) => setNumOfBeds(e.target.value)}
             required
           />
         </div>

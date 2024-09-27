@@ -1,4 +1,3 @@
-// models/Room.js
 const mongoose = require('mongoose');
 
 const roomSchema = new mongoose.Schema({
@@ -25,6 +24,14 @@ const roomSchema = new mongoose.Schema({
   photo: {
     type: String,
     required: true, // Path to the photo
+  },
+  type: {
+    type: String,
+    required: true, // Room type (e.g., King, Queen, etc.)
+  },
+  beds: {
+    type: Number,
+    required: true, // Number of beds
   },
 });
 

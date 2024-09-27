@@ -11,8 +11,8 @@ import "../../component/Component.css"
               <Link to="/" className="nav-link mx-2">
                 Home
               </Link>
-              <Link to="/dashboard" className="nav-link mx-2">
-                Rooms
+              <Link to="/" className="nav-link mx-2">
+                Services
               </Link>
               <Link to="/owner-login" className="nav-link mx-2">
                 Owner-login
