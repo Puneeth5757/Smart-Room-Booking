@@ -1,0 +1,16 @@
+.navbar {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    transition: background-color 0.3s ease;
+  }
+  
+  .navbar-nav .nav-link {
+    color: black !important; /* Default link color */
+  }
+  
+  .navbar-nav .nav-link:hover {
+    color: #0bcdf4 !important; /* Sky blue hover effect */
+  }
+  
+  .navbar-nav .nav-link.active {
+    color: #0bcdf4 !important; /* Sky blue for active link */
+  }
