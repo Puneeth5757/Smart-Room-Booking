@@ -5,7 +5,7 @@ const upload = require('../middleware/upload');
 
 // Route to register a room
 router.post('/', upload.single('photo'), async (req, res) => {
-  const { name, location, price, availableDate, amenities, type, beds } = req.body;
+  const { name, location, price, startAvailableDate, endAvailableDate, amenities, type, beds } = req.body;
 
   if (!req.file) {
     return res.status(400).json({ msg: 'Photo upload is required' });
@@ -16,7 +16,8 @@ router.post('/', upload.single('photo'), async (req, res) => {
       name,
       location,
       price,
-      availableDate,
+      startAvailableDate: new Date(startAvailableDate), // Ensure the date is stored in ISO format
+      endAvailableDate: new Date(endAvailableDate),
       amenities,
       photo: req.file.path, // Save the path of the uploaded photo
       type,

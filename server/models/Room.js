@@ -13,9 +13,13 @@ const roomSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  availableDate: {
+  startAvailableDate: {
     type: Date,
-    required: true,
+    required: true, // Start of availability
+  },
+  endAvailableDate: {
+    type: Date,
+    required: true, // End of availability
   },
   amenities: {
     type: String,

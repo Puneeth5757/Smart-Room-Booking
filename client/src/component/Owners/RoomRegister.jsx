@@ -5,7 +5,8 @@ const OwnerDashboard = () => {
   const [roomName, setRoomName] = useState('');
   const [location, setLocation] = useState('');
   const [price, setPrice] = useState('');
-  const [availableDate, setAvailableDate] = useState('');
+  const [startAvailableDate, setStartAvailableDate] = useState(''); // Start date
+  const [endAvailableDate, setEndAvailableDate] = useState(''); // End date
   const [amenities, setAmenities] = useState('');
   const [photo, setPhoto] = useState(null);
   const [roomType, setRoomType] = useState('');
@@ -13,12 +14,16 @@ const OwnerDashboard = () => {
 
   const handleRoomRegistration = async (e) => {
     e.preventDefault();
-    
+
     const formData = new FormData();
     formData.append('name', roomName);
     formData.append('location', location);
     formData.append('price', price);
-    formData.append('availableDate', availableDate);
+
+    // Convert dates to ISO format
+    formData.append('startAvailableDate', new Date(startAvailableDate).toISOString()); // Start date
+    formData.append('endAvailableDate', new Date(endAvailableDate).toISOString());     // End date
+
     formData.append('amenities', amenities);
     formData.append('photo', photo);
     formData.append('type', roomType);
@@ -36,7 +41,8 @@ const OwnerDashboard = () => {
       setRoomName('');
       setLocation('');
       setPrice('');
-      setAvailableDate('');
+      setStartAvailableDate('');
+      setEndAvailableDate('');
       setAmenities('');
       setPhoto(null);
       setRoomType('');
@@ -82,16 +88,6 @@ const OwnerDashboard = () => {
           />
         </div>
         <div className="col-md-6">
-          <label className="form-label">Available Date</label>
-          <input
-            type="date"
-            className="form-control"
-            value={availableDate}
-            onChange={(e) => setAvailableDate(e.target.value)}
-            required
-          />
-        </div>
-        <div className="col-md-6">
           <label className="form-label">Room Type</label>
           <select
             className="form-select"
@@ -104,6 +100,26 @@ const OwnerDashboard = () => {
             <option value="Queen">Queen</option>
             <option value="Double">Double</option>
           </select>
+        </div>
+        <div className="col-md-6">
+          <label className="form-label">Start Available Date</label>
+          <input
+            type="date"
+            className="form-control"
+            value={startAvailableDate}
+            onChange={(e) => setStartAvailableDate(e.target.value)}
+            required
+          />
+        </div>
+        <div className="col-md-6">
+          <label className="form-label">End Available Date</label>
+          <input
+            type="date"
+            className="form-control"
+            value={endAvailableDate}
+            onChange={(e) => setEndAvailableDate(e.target.value)}
+            required
+          />
         </div>
         <div className="col-md-6">
           <label className="form-label">Number of Beds</label>

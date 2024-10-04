@@ -7,15 +7,17 @@ const RoomsPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [numOfBeds, setNumOfBeds] = useState('All');
   const [roomType, setRoomType] = useState('All');
+  const [startDate, setStartDate] = useState('');  // Start date filter
+  const [endDate, setEndDate] = useState('');      // End date filter
 
   // Fetch rooms data from the server
   useEffect(() => {
     const fetchRooms = async () => {
       try {
         const response = await axios.get('http://localhost:3000/api/rooms');
-        console.log(response.data);  
-        setRooms(response.data); 
-        setFilteredRooms(response.data); 
+        console.log(response.data);
+        setRooms(response.data);
+        setFilteredRooms(response.data);
       } catch (error) {
         console.error('Error fetching rooms:', error);
       }
@@ -23,7 +25,16 @@ const RoomsPage = () => {
     fetchRooms();
   }, []);
 
-  // Filter rooms based on search term, number of beds, and room type
+  // Format available dates into a user-friendly string
+  const formatAvailableDates = (startDate, endDate) => {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return `Available from ${start.toLocaleDateString(undefined, options)} to ${end.toLocaleDateString(undefined, options)}`;
+  };
+
+  // Filter rooms based on search term, number of beds, room type, and date range
   useEffect(() => {
     let filtered = rooms.filter((room) =>
       room.name && room.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -37,8 +48,19 @@ const RoomsPage = () => {
       filtered = filtered.filter((room) => room.type && room.type === roomType);
     }
 
+    // Filter by date range
+    if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      filtered = filtered.filter((room) => {
+        const availableStart = new Date(room.startAvailableDate);
+        const availableEnd = new Date(room.endAvailableDate);
+        return (availableStart <= end && availableEnd >= start);
+      });
+    }
+
     setFilteredRooms(filtered);
-  }, [searchTerm, numOfBeds, roomType, rooms]);
+  }, [searchTerm, numOfBeds, roomType, startDate, endDate, rooms]);
 
   return (
     <div className="container mt-5">
@@ -50,7 +72,7 @@ const RoomsPage = () => {
           <input
             type="text"
             className="form-control"
-            placeholder="Search"
+            placeholder="Search by name"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -74,10 +96,35 @@ const RoomsPage = () => {
             value={roomType}
             onChange={(e) => setRoomType(e.target.value)}
           >
+            <option value="All">Room Type</option>
             <option value="King">King</option>
             <option value="Queen">Queen</option>
             <option value="Double">Double</option>
           </select>
+        </div>
+      </div>
+
+      {/* Date Range Filters */}
+      <div className="row mb-4">
+        <div className="col-md-6">
+          <label className="form-label" htmlFor="start-date">Start Date</label>
+          <input
+            type="date"
+            id="start-date"
+            className="form-control"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+          />
+        </div>
+        <div className="col-md-6">
+          <label className="form-label" htmlFor="end-date">End Date</label>
+          <input
+            type="date"
+            id="end-date"
+            className="form-control"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+          />
         </div>
       </div>
 
@@ -95,23 +142,37 @@ const RoomsPage = () => {
                 />
                 <div className="card-body">
                   <h5 className="card-title">
-                    <a 
-                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(room.location)}`} 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(room.location)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="text-primary"
                     >
                       {room.name}
                     </a>
                   </h5>
                   <p className="card-text text-muted">${room.price} / Per Night</p>
-                  <p className="card-text text-muted">{room.beds} Beds</p> {/* Number of Beds */}
-                  <p className="card-text text-muted">{room.type} Room</p> {/* Room Type */}
-                  <p className="card-text text-muted">Available on: {new Date(room.availableDate).toLocaleDateString()}</p> {/* Available Date */}
+
+                  {/* Room Type and Number of Beds Side by Side */}
+                  <div className="d-flex justify-content-between">
+                    <p className="card-text text-muted">{room.beds} Beds</p>
+                    <p className="card-text text-muted">{room.type} Room</p>
+                  </div>
+
+                  {/* Display Location */}
+                  <p className="card-text text-muted" style={{ fontWeight: 'bold' }}>
+                    <span role="img" aria-label="location" style={{ marginRight: '5px' }}>📍</span>
+                    {room.location}
+                  </p>
+
+                  {/* User-Friendly Availability Display */}
+                  <p className="card-text text-muted" style={{ fontWeight: 'bold' }}>
+                    <span role="img" aria-label="calendar" style={{ marginRight: '5px' }}>📅</span>
+                    {formatAvailableDates(room.startAvailableDate, room.endAvailableDate)}
+                  </p>
+
                   <p className="card-text text-muted">{room.amenities}</p>
-                  <a className="btn btn-primary" href={`/rooms/${room._id}`}>
-                    View Details
-                  </a>
+                  <a className="btn btn-primary">Book Now</a>
                 </div>
               </div>
             </div>
