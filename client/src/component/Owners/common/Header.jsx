@@ -1,11 +1,13 @@
 import "./Header.css";
 import { Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom'; 
 
 const Header = () => {
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Logic for logging out the user (e.g., removing tokens, etc.)
     console.log("User logged out");
+    navigate("/");
   };
 
   return (

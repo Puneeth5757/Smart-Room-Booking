@@ -5,7 +5,12 @@ const cors = require('cors');
 const app = express();
 const port = 3000;
 
-app.use(cors());
+const corsOptions = {
+    origin: 'http://localhost:5173', 
+    credentials: true,
+  };
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Serve static files from 'uploads' (for photo access)
