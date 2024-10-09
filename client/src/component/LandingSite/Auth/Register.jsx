@@ -107,6 +107,7 @@ const SignUp = () => {
       });
 
       alert("Signed in successfully");
+      history("/login");
     } catch (error) {
       console.error("Error signing in with Google:", error);
       alert("Error signing in with Google: " + error.message);

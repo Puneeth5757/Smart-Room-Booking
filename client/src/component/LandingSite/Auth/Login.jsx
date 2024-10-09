@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { Container, Form, Button } from "react-bootstrap";
-import { userAuth, userGoogleProvider, signInWithPopup } from '../../../user-firebase';
+import {
+  userAuth,
+  userGoogleProvider,
+  signInWithPopup,
+} from "../../../user-firebase";
 import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Login = () => {
   const [passShow, setPassShow] = useState(false);
-
   const [inpval, setInpval] = useState({
     email: "",
     password: "",
@@ -72,8 +75,8 @@ const Login = () => {
         uid: user.uid,
         username: user.displayName,
         email: user.email,
-        phone: '',
-        role: 'user',
+        phone: "",
+        role: "user",
       });
 
       history("/dashboard");
@@ -113,10 +116,7 @@ const Login = () => {
               className="form-control"
               placeholder="Enter Your password"
             />
-            <div
-              className="showpass"
-              onClick={() => setPassShow(!passShow)}
-            >
+            <div className="showpass" onClick={() => setPassShow(!passShow)}>
               {!passShow ? "Show" : "Hide"}
             </div>
           </div>

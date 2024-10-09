@@ -1,7 +1,7 @@
 import { Outlet, useNavigate } from "react-router-dom";
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect } from "react";
 import Header from "./common/Header";
-import { LoginContext } from "../LandingSite/Auth/ContextProvider/Context"
+import { LoginContext } from "../LandingSite/Auth/ContextProvider/Context";
 
 const Dashboard = () => {
   const { setLoginData } = useContext(LoginContext);
@@ -10,7 +10,7 @@ const Dashboard = () => {
 
   const DashboardValid = async () => {
     let token = localStorage.getItem("usersdatatoken");
-    console.log(token)
+    console.log(token);
 
     const res = await fetch("http://localhost:3000/api/users/validuser", {
       method: "GET",
@@ -26,7 +26,7 @@ const Dashboard = () => {
       console.log("redirected to error page");
       history("*");
     } else {
-      console.log("user verify");
+      console.log("user verification done");
       setLoginData(data);
       history("/dashboard");
     }
@@ -34,7 +34,6 @@ const Dashboard = () => {
   useEffect(() => {
     DashboardValid();
   }, []);
- 
 
   return (
     <>

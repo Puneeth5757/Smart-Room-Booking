@@ -2,16 +2,14 @@ const express = require("express");
 const router = new express.Router();
 const ownerdb = require("../models/OwnerSchema");
 const bcrypt = require("bcryptjs");
-const authenticate = require("../middleware/owner-authenticate");
+const authenticateOwner = require("../middleware/owner-authenticate");
 
-
-// for user registration
-
+// User registration route
 router.post("/register", async (req, res) => {
   // console.log(req.body);
   
-  const { ownername, email, phone, password, cpassword } = req.body;
-  if (!ownername || !email || !phone || !password || !cpassword) {
+  const { name, email, phone, password, cpassword } = req.body;
+  if (!name || !email || !phone || !password || !cpassword) {
     return res.status(422).json({ error: "Fill all the details" }); 
   }
 
@@ -23,15 +21,15 @@ router.post("/register", async (req, res) => {
     } else if (password !== cpassword) {
       return res.status(422).json({ error: "Password and Confirm Password Not Match" });
     } else {
-      const finalowner = new ownerdb({
-        ownername,
+      const finalUser = new ownerdb({
+        name,
         email,
         phone,
         password,
         cpassword,
       });
 
-      const storeData = await finalowner.save();
+      const storeData = await finalUser.save();
       return res.status(201).json({ status: 201, storeData });
     }
   } catch (error) {
@@ -41,28 +39,26 @@ router.post("/register", async (req, res) => {
 });
 
 
-// for user login
-
+// User login route
 router.post("/login", async (req, res) => {
   // console.log(req.body);
 
   const { email, password } = req.body;
-
   if (!email || !password) {
     res.status(422).json({ error: "fill all the details" });
   }
 
   try {
-    const ownerValid = await ownerdb.findOne({email:email});
+    const userValid = await ownerdb.findOne({email:email});
 
-     if(ownerValid){
+     if(userValid){
 
-         const isMatch = await bcrypt.compare(password,ownerValid.password);
+         const isMatch = await bcrypt.compare(password,userValid.password);
 
          if(!isMatch){
              res.status(422).json({ error: "invalid details"})
          }else{
-             const token = await ownerValid.generateAuthtoken();//Asynchronous functions
+             const token = await userValid.generateAuthtoken();//Asynchronous functions
 
             //  console.log(token); 
 
@@ -73,7 +69,7 @@ router.post("/login", async (req, res) => {
              });
 
              const result = {
-              ownerValid,
+                 userValid,
                  token
              }
              res.status(201).json({status:201,result})
@@ -87,10 +83,10 @@ router.post("/login", async (req, res) => {
 });
 
 // user valid
-router.get("/validuser",authenticate,async(req,res)=>{
+router.get("/validuser",authenticateOwner,async(req,res)=>{
   try {
-    const ValidOwnerOne = await ownerdb.findOne({_id:req.userId});
-    res.status(201).json({status:201,ValidOwnerOne});
+    const ValidUserOne = await ownerdb.findOne({_id:req.userId});
+    res.status(201).json({status:201,ValidUserOne});
 } catch (error) {
     res.status(401).json({status:401,error});
 }
@@ -98,7 +94,7 @@ router.get("/validuser",authenticate,async(req,res)=>{
 
 // user logout
 
-  router.get("/logout",authenticate,async(req,res)=>{
+  router.get("/logout",authenticateOwner,async(req,res)=>{
     try {
         req.rootUser.tokens =  req.rootUser.tokens.filter((curelem)=>{
             return curelem.token !== req.token   // to get 1 out of 4 tokens

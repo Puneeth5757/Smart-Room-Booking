@@ -1,27 +1,27 @@
+// to validate the user
 const jwt = require("jsonwebtoken");
-const Ownerdb = require("../models/OwnerSchema"); // Assuming OwnerSchema exists in models folder
-const keysecret = "Puneeth@101112131415161718192021"; // Replace with a strong secret
+const ownerdb = require("../models/OwnerSchema");
+const keysecret = "Puneeth@101112131415161718192021"
 
-const authenticateOwner = async (req, res, next) => {
-  try {
-    const token = req.headers.authorization;
+const authenticate = async(req,res,next)=>{
+    try {
+        const token = req.headers.authorization;
 
-    const verifytoken = jwt.verify(token, keysecret);
+        const verifytoken = jwt.verify(token,keysecret);
 
-    const rootOwner = await Ownerdb.findOne({ _id: verifytoken._id });
+        const rootUser = await ownerdb.findOne({_id:verifytoken._id});
 
-    if (!rootOwner) {
-      throw new Error("Owner not found");
+        if(!rootUser) {throw new Error("user not found")}
+
+        req.token = token
+        req.rootUser = rootUser
+        req.userId = rootUser._id
+
+        next();
+
+    } catch (error) {
+         res.status(401).json({status:401,message:"Unauthorized no token provide"}) 
     }
+}
 
-    req.token = token;
-    req.rootOwner = rootOwner;
-    req.ownerId = rootOwner._id;
-
-    next();
-  } catch (error) {
-    res.status(401).json({ status: 401, message: "Unauthorized: Invalid token" });
-  }
-};
-
-module.exports = authenticateOwner;
+module.exports = authenticate

@@ -1,39 +1,51 @@
 import { useState } from "react";
 import { Container, Form, Button } from "react-bootstrap";
-import { auth, googleProvider, signInWithPopup } from '../../../firebase';
 import { NavLink, useNavigate } from "react-router-dom";
+import { auth, googleProvider, signInWithPopup } from "../../../firebase";
 import axios from "axios";
 
 const OwnerLogin = () => {
+
   const [passShow, setPassShow] = useState(false);
   const [inpval, setInpval] = useState({
     email: "",
     password: "",
   });
+  // console.log(inpval)
 
   const history = useNavigate();
 
   const setVal = (e) => {
+    // console.log(e.target.value);
     const { name, value } = e.target;
-    setInpval({
-      ...inpval,
-      [name]: value,
+
+    setInpval(() => {
+      return {
+        ...inpval,
+        [name]: value,
+      };
     });
   };
-
+  
   const handleLogin = async (e) => {
     e.preventDefault();
+
     const { email, password } = inpval;
 
-    if (!email) {
-      alert("Email is required!");
+    if (email === "") {
+     alert("password is required!");
+
     } else if (!email.includes("@")) {
-      alert("Enter a valid email!");
-    } else if (!password) {
-      alert("Password is required!");
+      alert("password is required!");
+
+    } else if (password === "") {
+      alert("password is required!");
+
     } else if (password.length < 6) {
-      alert("Password must be at least 6 characters!");
+      alert("password must be 6 char!");
+
     } else {
+      
       const data = await fetch("http://localhost:3000/api/owners/login", {
         method: "POST",
         headers: {
@@ -48,11 +60,14 @@ const OwnerLogin = () => {
       const res = await data.json();
       console.log(res);
 
-      if (res.status === 201 || res.status === 200) {
-        localStorage.setItem("ownersdatatoken", res.result?.token || '');
+      if (res.status === 201) {
+        localStorage.setItem("ownersdatatoken", res.result.token);
         history("/ownerdash");
-        console.log("Owner login successful");
-        setInpval({ email: "", password: "" });
+        setInpval({
+          ...inpval,
+          email: "",
+          password: "",
+        });
       }
     }
   };
@@ -66,8 +81,8 @@ const OwnerLogin = () => {
         uid: owner.uid,
         ownername: owner.displayName,
         email: owner.email,
-        phone: '',  
-        role: 'owner'
+        phone: "",
+        role: "owner",
       });
 
       alert("Signed in successfully");
@@ -80,36 +95,41 @@ const OwnerLogin = () => {
 
   return (
     <Container className="d-flex flex-column align-items-center justify-content-center vh-100">
-      <h2 className="mb-4"><b>Welcome back, Owner</b></h2>
+      <h2 className="mb-4">
+        <b>Welcome back, Owner</b>
+      </h2>
       <Form onSubmit={handleLogin} className="w-50">
         <div className="mb-3 px-5">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            onChange={setVal}
-            value={inpval.email}
-            name="email"
-            id="email"
-            className="form-control"
-            placeholder="Enter Your Email Address"
-          />
+        <label htmlFor="email">Email</label>
+              <input
+                type="email"
+                className="form-control"
+                onChange={setVal}
+                value={inpval.email}
+                name="email"
+                id="email"
+                placeholder="Enter Your Email Address"
+              />
         </div>
         <div className="mb-3 px-5">
-          <label htmlFor="password">Password</label>
-          <div className="two">
-            <input
-              type={!passShow ? "password" : "text"}
-              onChange={setVal}
-              value={inpval.password}
-              name="password"
-              id="password"
-              className="form-control"
-              placeholder="Enter Your password"
-            />
-            <div className="showpass" onClick={() => setPassShow(!passShow)}>
-              {!passShow ? "Show" : "Hide"}
-            </div>
-          </div>
+        <label htmlFor="password">Password</label>
+              <div className="two">
+                <input
+                  type={!passShow ? "password" : "text"}
+                  className="form-control"
+                  onChange={setVal}
+                  value={inpval.password}
+                  name="password"
+                  id="password"
+                  placeholder="Enter Your password"
+                />
+                <div
+                  className="showpass my-3"
+                  onClick={() => setPassShow(!passShow)}
+                >
+                  {!passShow ? "Show" : "Hide"}
+                </div>
+              </div>
         </div>
 
         <Button variant="success" type="submit" className="w-100 mb-3">
@@ -122,7 +142,11 @@ const OwnerLogin = () => {
 
         <br />
 
-        <Button variant="outline-primary" className="w-100 mb-2" onClick={handleGoogleSignIn}>
+        <Button
+          variant="outline-primary"
+          className="w-100 mb-2"
+          onClick={handleGoogleSignIn}
+        >
           <i className="fab fa-google"></i> Continue with Google
         </Button>
       </Form>

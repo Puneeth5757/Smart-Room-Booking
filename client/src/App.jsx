@@ -10,6 +10,7 @@ import RoomsPage from "./component/Rooms/RoomsPage";
 import OwnerDash from "./component/Owners/Dashboard"
 import RoomDash from "./component/Rooms/Dashboard"
 import RoomRegister from "./component/Owners/RoomRegister"
+import Profile from "./component/Owners/common/Profile";
 import Error from "./component/LandingSite/Auth/Error";
 
 
@@ -27,6 +28,7 @@ function App() {
 
       <Route path="ownerdash" element={<OwnerDash />}>
         <Route index element={<RoomRegister />} />
+        <Route path="profile" element={<Profile />} />
       </Route>
 
       <Route path="dashboard" element={<RoomDash />}>

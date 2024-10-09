@@ -6,10 +6,10 @@ router.post('/login', async (req, res) => {
   const { uid, username, email, phone, role } = req.body;
 
   try {
-   
-    let existingUser = await user.findOne({ uid });
+    // Check if a user with the given uid or email already exists
+    let existingUser = await user.findOne({ $or: [{ uid }, { email }] });
 
-    // If user already exists, allow them to log in
+    // If user exists, allow them to log in
     if (existingUser) {
       return res.status(200).json({ message: 'User logged in successfully', user: existingUser });
     }
