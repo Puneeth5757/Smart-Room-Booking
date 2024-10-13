@@ -31,13 +31,13 @@ const Login = () => {
     const { email, password } = inpval;
 
     if (email === "") {
-      alert("password is required!");
+      alert("Email is required!");
     } else if (!email.includes("@")) {
-      alert("password is required!");
+      alert("Enter a valid email!");
     } else if (password === "") {
-      alert("password is required!");
+      alert("Password is required!");
     } else if (password.length < 6) {
-      alert("password must be 6 char!");
+      alert("Password must be at least 6 characters!");
     } else {
       const data = await fetch("http://localhost:3000/api/users/login", {
         method: "POST",
@@ -55,8 +55,9 @@ const Login = () => {
 
       if (res.status === 201) {
         localStorage.setItem("usersdatatoken", res.result.token);
+        localStorage.setItem("isGoogleLogin", "false"); // Set flag for email/password login
         history("/dashboard");
-        console.log("login successfully");
+        console.log("Login successfully");
         setInpval({
           email: "",
           password: "",
@@ -79,6 +80,7 @@ const Login = () => {
         role: "user",
       });
 
+      localStorage.setItem("isGoogleLogin", "true"); // Set flag for Google login
       history("/dashboard");
 
       alert("Signed in successfully");
@@ -114,7 +116,7 @@ const Login = () => {
               name="password"
               id="password"
               className="form-control"
-              placeholder="Enter Your password"
+              placeholder="Enter Your Password"
             />
             <div className="showpass" onClick={() => setPassShow(!passShow)}>
               {!passShow ? "Show" : "Hide"}
@@ -127,7 +129,7 @@ const Login = () => {
         </Button>
 
         <div className="text-center px-5">
-          Don-t have an account? <NavLink to="/register">Sign Up</NavLink>
+          Don’t have an account? <NavLink to="/register">Sign Up</NavLink>
         </div>
 
         <br />

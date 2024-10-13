@@ -111,4 +111,19 @@ router.get("/validuser",authenticateOwner,async(req,res)=>{
     }
   })
 
+  router.get('/profile', authenticateOwner, async (req, res) => {
+    try {
+      const ownerId = req.user.id;  // Use the decoded token (assumed to contain owner id)
+      const owner = await Owner.findById(ownerId);  // Query the owner from MongoDB
+  
+      if (!owner) {
+        return res.status(404).json({ message: 'Owner not found' });
+      }
+  
+      res.status(200).json({ owner });
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
 module.exports = router;

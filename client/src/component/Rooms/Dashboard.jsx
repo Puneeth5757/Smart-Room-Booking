@@ -5,11 +5,19 @@ import { LoginContext } from "../LandingSite/Auth/ContextProvider/Context";
 
 const Dashboard = () => {
   const { setLoginData } = useContext(LoginContext);
-
   const history = useNavigate();
 
   const DashboardValid = async () => {
-    let token = localStorage.getItem("usersdatatoken");
+    const isGoogleLogin = localStorage.getItem("isGoogleLogin");
+
+    if (isGoogleLogin === "true") {
+      // User is logged in with Google, skip token validation
+      console.log("User logged in with Google, bypassing token validation.");
+      history("/dashboard");
+      return;
+    }
+
+    const token = localStorage.getItem("usersdatatoken");
     console.log(token);
 
     const res = await fetch("http://localhost:3000/api/users/validuser", {
@@ -22,15 +30,16 @@ const Dashboard = () => {
 
     const data = await res.json();
 
-    if (data.status == 401 || !data) {
-      console.log("redirected to error page");
+    if (data.status === 401 || !data) {
+      console.log("Redirected to error page");
       history("*");
     } else {
-      console.log("user verification done");
+      console.log("User verification done");
       setLoginData(data);
       history("/dashboard");
     }
   };
+
   useEffect(() => {
     DashboardValid();
   }, []);

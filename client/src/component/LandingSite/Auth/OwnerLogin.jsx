@@ -5,47 +5,35 @@ import { auth, googleProvider, signInWithPopup } from "../../../firebase";
 import axios from "axios";
 
 const OwnerLogin = () => {
-
   const [passShow, setPassShow] = useState(false);
   const [inpval, setInpval] = useState({
     email: "",
     password: "",
   });
-  // console.log(inpval)
 
   const history = useNavigate();
 
   const setVal = (e) => {
-    // console.log(e.target.value);
     const { name, value } = e.target;
-
-    setInpval(() => {
-      return {
-        ...inpval,
-        [name]: value,
-      };
-    });
+    setInpval((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
-  
+
   const handleLogin = async (e) => {
     e.preventDefault();
-
     const { email, password } = inpval;
 
     if (email === "") {
-     alert("password is required!");
-
+      alert("Email is required!");
     } else if (!email.includes("@")) {
-      alert("password is required!");
-
+      alert("Invalid email format!");
     } else if (password === "") {
-      alert("password is required!");
-
+      alert("Password is required!");
     } else if (password.length < 6) {
-      alert("password must be 6 char!");
-
+      alert("Password must be at least 6 characters long!");
     } else {
-      
       const data = await fetch("http://localhost:3000/api/owners/login", {
         method: "POST",
         headers: {
@@ -62,9 +50,9 @@ const OwnerLogin = () => {
 
       if (res.status === 201) {
         localStorage.setItem("ownersdatatoken", res.result.token);
+        localStorage.setItem("authMethod", "token"); // Set the authentication method
         history("/ownerdash");
         setInpval({
-          ...inpval,
           email: "",
           password: "",
         });
@@ -85,6 +73,7 @@ const OwnerLogin = () => {
         role: "owner",
       });
 
+      localStorage.setItem("authMethod", "google"); // Set the authentication method
       alert("Signed in successfully");
       history("/ownerdash");
     } catch (error) {
@@ -100,36 +89,36 @@ const OwnerLogin = () => {
       </h2>
       <Form onSubmit={handleLogin} className="w-50">
         <div className="mb-3 px-5">
-        <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                className="form-control"
-                onChange={setVal}
-                value={inpval.email}
-                name="email"
-                id="email"
-                placeholder="Enter Your Email Address"
-              />
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            className="form-control"
+            onChange={setVal}
+            value={inpval.email}
+            name="email"
+            id="email"
+            placeholder="Enter Your Email Address"
+          />
         </div>
         <div className="mb-3 px-5">
-        <label htmlFor="password">Password</label>
-              <div className="two">
-                <input
-                  type={!passShow ? "password" : "text"}
-                  className="form-control"
-                  onChange={setVal}
-                  value={inpval.password}
-                  name="password"
-                  id="password"
-                  placeholder="Enter Your password"
-                />
-                <div
-                  className="showpass my-3"
-                  onClick={() => setPassShow(!passShow)}
-                >
-                  {!passShow ? "Show" : "Hide"}
-                </div>
-              </div>
+          <label htmlFor="password">Password</label>
+          <div className="two">
+            <input
+              type={!passShow ? "password" : "text"}
+              className="form-control"
+              onChange={setVal}
+              value={inpval.password}
+              name="password"
+              id="password"
+              placeholder="Enter Your password"
+            />
+            <div
+              className="showpass my-3"
+              onClick={() => setPassShow(!passShow)}
+            >
+              {!passShow ? "Show" : "Hide"}
+            </div>
+          </div>
         </div>
 
         <Button variant="success" type="submit" className="w-100 mb-3">

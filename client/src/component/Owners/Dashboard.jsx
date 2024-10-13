@@ -5,33 +5,38 @@ import { LoginContext } from "../LandingSite/Auth/ContextProvider/Context";
 
 const OwnerDashboard = () => {
   const { setLoginData } = useContext(LoginContext);
-  // console.log(logindata.ValidUserOne);
-
   const history = useNavigate();
 
   const DashboardValid = async () => {
-    let token = localStorage.getItem("ownersdatatoken");
-    // console.log(token)
+    const token = localStorage.getItem("ownersdatatoken");
+    const authMethod = localStorage.getItem("authMethod");
 
-    const res = await fetch("http://localhost:3000/api/owners/validuser", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-    });
+    if (authMethod === "token") {
+      // Only validate the token if the authentication method is token-based
+      const res = await fetch("http://localhost:3000/api/owners/validuser", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (data.status == 401 || !data) {
-      console.log("redirected to error page");
-      history("*");
+      if (data.status === 401 || !data) {
+        console.log("redirected to error page");
+        history("*");
+      } else {
+        console.log("owner verified with token");
+        setLoginData(data);
+        history("/ownerdash");
+      }
     } else {
-      console.log("user verify");
-      setLoginData(data);
+      console.log("owner verified with Google");
       history("/ownerdash");
     }
   };
+
   useEffect(() => {
     DashboardValid();
   }, []);

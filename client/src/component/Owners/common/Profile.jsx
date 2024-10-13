@@ -1,32 +1,38 @@
-// import { useState, useEffect } from 'react';
-// import axios from 'axios';
-
 const Profile = () => {
-//   const [ownerInfo, setOwnerInfo] = useState(null);
-
-//   useEffect(() => {
-//     const token = localStorage.getItem('ownersdatatoken');
-//     if (token) {
-//       axios.get('http://localhost:3000/api/owners/profile', {
-//         headers: { Authorization: token },
-//       }).then(response => {
-//         setOwnerInfo(response.data.owner);  // Assuming the API returns owner data
-//       }).catch(err => {
-//         console.log('Error fetching owner info', err);
-//       });
-//     }
-//   }, []);
-
-//   if (!ownerInfo) {
-//     return <div>Loading...</div>;
-//   }
-
   return (
-    <div className="profile-container">
-      <h2>Profile Information</h2>
-      {/* <p><strong>Name:</strong> {ownerInfo.ownername}</p>
-      <p><strong>Email:</strong> {ownerInfo.email}</p>
-      <p><strong>Phone:</strong> {ownerInfo.phone}</p> */}
+    <div className="container mt-5">
+      <div className="card shadow-sm border-0">
+        <div className="card-header bg-primary text-white text-center">
+          <h2 className="mb-0">Profile Information</h2>
+        </div>
+        <div className="card-body">
+          <div className="row mb-3">
+            <div className="col-md-3">
+              <strong>Name:</strong>
+            </div>
+            <div className="col-md-9">
+              <p className="text-muted">Not available</p>
+            </div>
+          </div>
+          <div className="row mb-3">
+            <div className="col-md-3">
+              <strong>Email:</strong>
+            </div>
+            <div className="col-md-9">
+              <p className="text-muted">Not available</p>
+            </div>
+          </div>
+          <div className="row mb-3">
+            <div className="col-md-3">
+              <strong>Phone:</strong>
+            </div>
+            <div className="col-md-9">
+              <p className="text-muted">Not available</p>
+            </div>
+          </div>
+          {/* Add more profile details here */}
+        </div>
+      </div>
     </div>
   );
 };

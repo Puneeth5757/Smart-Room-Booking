@@ -13,7 +13,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-// Serve static files from 'uploads' (for photo access)
+// Serve static files from 'uploads' (for photo access) -- Access Control,Security and Organization
 app.use('/uploads', express.static('uploads'));
 
 app.use("/api/g-users", require("./routes/google-userRouter"));

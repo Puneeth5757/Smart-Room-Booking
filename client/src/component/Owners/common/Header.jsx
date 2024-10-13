@@ -9,19 +9,9 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 const Header = () => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
-  // const [ownerInfo, setOwnerInfo] = useState(null);
+
 
   useEffect(() => {
-    // const token = localStorage.getItem('ownersdatatoken');
-    // if (token) {
-    //   axios.get('http://localhost:3000/api/owners/profile', {
-    //     headers: { Authorization: token },
-    //   }).then(response => {
-    //     setOwnerInfo(response.data.owner); // Assuming the API returns owner info
-    //   }).catch(err => {
-    //     console.log('Error fetching owner info', err);
-    //   });
-    // }
   }, []);
 
   const handleMenuOpen = (event) => {
@@ -39,7 +29,7 @@ const Header = () => {
   };
 
   const handleProfile = () => {
-    navigate('/profile');  // Navigate to Profile Page
+    navigate('/ownerdash/profile');
     handleMenuClose();
   };
 
