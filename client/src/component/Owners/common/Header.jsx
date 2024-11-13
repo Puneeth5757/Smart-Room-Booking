@@ -1,14 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect,  useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { LoginContext } from "../../LandingSite/Auth/ContextProvider/Context";
 // import axios from 'axios';
 
 const Header = () => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
+  const { logindata } = useContext(LoginContext);
 
 
   useEffect(() => {
@@ -24,6 +26,7 @@ const Header = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('ownersdatatoken');
+    localStorage.removeItem('uid');
     navigate('/');
     handleMenuClose();
   };
@@ -39,7 +42,7 @@ const Header = () => {
         <div className="container-fluid">
           <nav className="navbar navbar-expand-lg fixed-top d-flex justify-content-between px-5">
             <h1 className="navbar-brand mb-0">
-              Email: { "example@example.com"} {/* Display owner email */}
+              Email: {logindata ? logindata.ValidUserOne.email : ""}
             </h1>
             <div className="d-flex align-items-center">
               <IconButton

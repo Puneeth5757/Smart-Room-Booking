@@ -1,35 +1,59 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Owner = require('../models/google-ownerSchema');
+const Owner = require("../models/google-ownerSchema");
 
-// Register or Login Owner
-router.post('/login', async (req, res) => {
+// POST route for login or registration
+router.post("/login", async (req, res) => {
   const { uid, ownername, email, phone, role } = req.body;
 
+  if (!uid || !ownername || !email) {
+    return res.status(400).json({ error: "Missing required fields" });
+  }
+
   try {
-    // Check if the owner already exists
     const existingOwner = await Owner.findOne({ uid });
-    
-    // If owner already exists, allow them to log in
+
     if (existingOwner) {
-      return res.status(200).json({ message: 'Owner logged in successfully', owner: existingOwner });
+      return res.status(200).json({
+        message: "Owner logged in successfully",
+        owner: existingOwner,
+      });
     }
 
-    // Create new owner if not found
     const newOwner = new Owner({
       uid,
       ownername,
       email,
       phone,
-      role, // Set default role to 'owner' if not provided
+      role: role || "owner",
     });
 
-    // Save new owner to the database
     await newOwner.save();
-    res.status(201).json({ message: 'Owner registered successfully', owner: newOwner });
+    return res.status(201).json({
+      message: "Owner registered successfully",
+      owner: newOwner,
+    });
   } catch (err) {
-    console.error('Error:', err.message); 
-    res.status(500).json({ error: 'Error registering or logging in owner' });
+    console.error("Error:", err.message);
+    return res.status(500).json({ error: "An error occurred during login or registration" });
+  }
+});
+
+// GET route to fetch owner's profile
+router.get("/profile/:uid", async (req, res) => {
+  const { uid } = req.params;
+
+  try {
+    const owner = await Owner.findOne({ uid });
+
+    if (!owner) {
+      return res.status(404).json({ error: "Owner not found" });
+    }
+
+    return res.status(200).json({ owner });
+  } catch (err) {
+    console.error("Error:", err.message);
+    return res.status(500).json({ error: "An error occurred while fetching profile" });
   }
 });
 

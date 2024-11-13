@@ -65,6 +65,10 @@ const OwnerLogin = () => {
       const result = await signInWithPopup(auth, googleProvider);
       const owner = result.user;
 
+      // Store the UID in localStorage
+      localStorage.setItem("uid", owner.uid);
+
+      // Perform login or registration
       await axios.post("http://localhost:3000/api/g-owners/login", {
         uid: owner.uid,
         ownername: owner.displayName,
