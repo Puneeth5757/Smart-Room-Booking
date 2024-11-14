@@ -1,21 +1,23 @@
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { LoginContext } from "../../LandingSite/Auth/ContextProvider/Context";
+import { LoginContext } from "../LandingSite/Auth/ContextProvider/Context";
 
 const Profile = () => {
   const { logindata } = useContext(LoginContext);
   const [authMethod, ] = useState(localStorage.getItem("authMethod"));
+  const [isGoogleLogin, ] = useState(localStorage.getItem("isGoogleLogin"));
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
-      if (authMethod === "google") {
-        const uid = localStorage.getItem("uid"); // Get the UID from localStorage for Google login
+        if (isGoogleLogin === "true") {
+        const uid = localStorage.getItem("uid");
         if (uid) {
           try {
-            const response = await axios.get(`http://localhost:3000/api/g-owners/profile/${uid}`);
-            setUserData(response.data.owner);
+            const response = await axios.get(`http://localhost:3000/api/g-users/User-profile/${uid}`);
+            console.log()
+            setUserData(response.data.user);
           } catch (err) {
             setError("Failed to fetch profile: " + err.message);
           }
@@ -56,7 +58,7 @@ const Profile = () => {
               <strong>Name:</strong>
             </div>
             <div className="col-md-9">
-              <p className="text-muted">{userData.name || userData.ownername}</p>
+              <p className="text-muted">{userData.username || userData.username}</p>
             </div>
           </div>
           <div className="row mb-3">

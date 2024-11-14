@@ -11,6 +11,7 @@ import OwnerDash from "./component/Owners/Dashboard"
 import RoomDash from "./component/Rooms/Dashboard"
 import RoomRegister from "./component/Owners/RoomRegister"
 import Profile from "./component/Owners/common/Profile";
+import UserProfile from "./component/Rooms/User-profile"
 import Error from "./component/LandingSite/Auth/Error";
 
 
@@ -33,6 +34,7 @@ function App() {
 
       <Route path="dashboard" element={<RoomDash />}>
         <Route index element={<RoomsPage />} />
+        <Route path="User-profile" element={<UserProfile />} />
       </Route>
 
     </Routes>   

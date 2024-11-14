@@ -71,6 +71,9 @@ const Login = () => {
       const result = await signInWithPopup(userAuth, userGoogleProvider);
       const user = result.user;
 
+      // Store the UID in localStorage
+      localStorage.setItem("uid", user.uid);
+
       // Send user info to the server
       await axios.post("http://localhost:3000/api/g-users/login", {
         uid: user.uid,

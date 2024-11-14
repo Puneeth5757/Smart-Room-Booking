@@ -15,7 +15,7 @@ const RoomsPage = () => {
     const fetchRooms = async () => {
       try {
         const response = await axios.get('http://localhost:3000/api/rooms');
-        console.log(response.data);
+        // console.log(response.data);
         setRooms(response.data);
         setFilteredRooms(response.data);
       } catch (error) {

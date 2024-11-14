@@ -1,14 +1,39 @@
-import "./Header.css";
-import { Button } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom'; 
-// import { useState } from 'react'; 
+import { useState, useEffect,  useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { LoginContext } from "../../LandingSite/Auth/ContextProvider/Context";
+// import axios from 'axios';
 
 const Header = () => {
   const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const { logindata } = useContext(LoginContext);
 
-  const handleLogout = async () => {
+
+  useEffect(() => {
+  }, []);
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
     localStorage.removeItem('usersdatatoken');
+    localStorage.removeItem('uid');
     navigate('/');
+    handleMenuClose();
+  };
+
+  const handleProfile = () => {
+    navigate('/dashboard/User-profile');
+    handleMenuClose();
   };
 
   return (
@@ -17,12 +42,34 @@ const Header = () => {
         <div className="container-fluid">
           <nav className="navbar navbar-expand-lg fixed-top d-flex justify-content-between px-5">
             <h1 className="navbar-brand mb-0">
-              Email: example@example.com {/* Replace with actual user email */}
+              Email: {logindata ? logindata.ValidUserOne.email : ""}
             </h1>
             <div className="d-flex align-items-center">
-              <Button onClick={handleLogout}>
-                Logout
-              </Button>
+              <IconButton
+                onClick={handleMenuOpen}
+                color="inherit"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+              >
+                <AccountCircleIcon />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleMenuClose}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+              >
+                <MenuItem onClick={handleProfile}>My Profile</MenuItem>
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              </Menu>
             </div>
           </nav>
         </div>
