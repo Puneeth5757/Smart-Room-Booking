@@ -1,0 +1,59 @@
+/* Sidebar Styling */
+.sidebar {
+    height: 100vh; /* Full viewport height */
+    width: 300px; /* Sidebar width */
+    background-color: #191a1c; /* Sidebar background color */
+    padding-top: 20px;
+    color: #fff;
+    position: fixed; /* Fixed to the viewport */
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    z-index: 1050; /* Higher than navbar to overlap */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5); /* Optional shadow for better visibility */
+}
+
+/* Sidebar Header */
+.sidebar .header {
+    font-size: 1.25rem;
+    font-weight: bold;
+    background-color: #007bff; 
+    padding: 10px 15px;
+    border-radius: 5px;
+    color: #fff;
+    text-align: center;
+    position: relative;
+    z-index: 20; /* Place it above other elements */
+}
+
+/* Sidebar List Items */
+.sidebar .list-group-item {
+    background-color: transparent;
+    border: none;
+    color: #fff;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.sidebar .list-group-item:hover {
+    color: #fff;
+}
+
+/* Sidebar Icons */
+.sidebar .list-group-item .icon {
+    margin-right: 10px;
+}
+
+/* Hidden Email Section */
+.sidebar .email {
+    position: relative;
+    color: #000; /* Black text to blend into the background */
+    font-size: 0.9rem;
+    text-align: center;
+    z-index: 1; /* Place it behind the Dashboard section */
+    top: -20px; /* Shift slightly upward for alignment */
+    background: transparent;
+}

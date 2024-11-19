@@ -32,12 +32,12 @@ function Navbar() {
           </li>
           <li className="nav-item">
             <Link to="/owner-login" className="nav-link">
-              Owner-login
+              Owners-login
             </Link>
           </li>
           <li className="nav-item">
             <Link to="/login" className="nav-link">
-              Login
+              Users-login
             </Link>
           </li>
         </ul>
