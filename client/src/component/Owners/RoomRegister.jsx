@@ -1,61 +1,96 @@
-import { useState } from 'react';
-import axios from 'axios';
+import { useState, useContext, useEffect } from "react";
+import axios from "axios";
+import { LoginContext } from "../LandingSite/Auth/ContextProvider/Context";
 
-const OwnerDashboard = () => {
-  const [roomName, setRoomName] = useState('');
-  const [location, setLocation] = useState('');
-  const [price, setPrice] = useState('');
-  const [startAvailableDate, setStartAvailableDate] = useState(''); // Start date
-  const [endAvailableDate, setEndAvailableDate] = useState(''); // End date
-  const [amenities, setAmenities] = useState('');
+const RoomRegister = () => {
+  const { logindata } = useContext(LoginContext);
+  const [ownerId, setOwnerId] = useState(null);
+
+  const [roomName, setRoomName] = useState("");
+  const [location, setLocation] = useState("");
+  const [price, setPrice] = useState("");
+  const [startAvailableDate, setStartAvailableDate] = useState("");
+  const [endAvailableDate, setEndAvailableDate] = useState("");
+  const [amenities, setAmenities] = useState("");
   const [photo, setPhoto] = useState(null);
-  const [roomType, setRoomType] = useState('');
-  const [numOfBeds, setNumOfBeds] = useState('');
+  const [roomType, setRoomType] = useState("");
+  const [numOfBeds, setNumOfBeds] = useState("");
+  const [status, setStatus] = useState("available");
+
+  // Fetch ownerId based on auth method
+  useEffect(() => {
+    const fetchOwnerId = async () => {
+      const authMethod = localStorage.getItem("authMethod");
+
+      if (authMethod === "google") {
+        // Google-based authentication
+        const uid = localStorage.getItem("uid");
+        if (uid) {
+          try {
+            const response = await axios.get(`http://localhost:3000/api/g-owners/profile/${uid}`);
+            setOwnerId(response.data.owner._id); // Assuming the response contains an owner object
+          } catch (err) {
+            console.error("Failed to fetch ownerId:", err.message);
+          }
+        }
+      } else if (authMethod === "token") {
+        // Token-based authentication
+        setOwnerId(logindata?._id || logindata?.ValidUserOne?._id);
+      }
+    };
+
+    fetchOwnerId();
+  }, [logindata]);
 
   const handleRoomRegistration = async (e) => {
     e.preventDefault();
 
+    if (!ownerId) {
+      alert("Owner ID not found. Please ensure you are logged in.");
+      return;
+    }
+
     const formData = new FormData();
-    formData.append('name', roomName);
-    formData.append('location', location);
-    formData.append('price', price);
-
-    // Convert dates to ISO format
-    formData.append('startAvailableDate', new Date(startAvailableDate).toISOString()); // Start date
-    formData.append('endAvailableDate', new Date(endAvailableDate).toISOString());     // End date
-
-    formData.append('amenities', amenities);
-    formData.append('photo', photo);
-    formData.append('type', roomType);
-    formData.append('beds', numOfBeds);
+    formData.append("name", roomName);
+    formData.append("location", location);
+    formData.append("price", price);
+    formData.append("startAvailableDate", new Date(startAvailableDate).toISOString());
+    formData.append("endAvailableDate", new Date(endAvailableDate).toISOString());
+    formData.append("amenities", amenities);
+    formData.append("photo", photo);
+    formData.append("type", roomType);
+    formData.append("beds", numOfBeds);
+    formData.append("status", status);
+    formData.append("ownerId", ownerId); // Add ownerId to the request
 
     try {
-      const response = await axios.post('http://localhost:3000/api/rooms', formData, {
+      const response = await axios.post("http://localhost:3000/api/rooms", formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         },
       });
-      console.log(response);
-      alert('Room registered successfully');
-      // Clear the form
-      setRoomName('');
-      setLocation('');
-      setPrice('');
-      setStartAvailableDate('');
-      setEndAvailableDate('');
-      setAmenities('');
+      console.log(response.data);
+      alert("Room registered successfully");
+      // Clear form fields
+      setRoomName("");
+      setLocation("");
+      setPrice("");
+      setStartAvailableDate("");
+      setEndAvailableDate("");
+      setAmenities("");
       setPhoto(null);
-      setRoomType('');
-      setNumOfBeds('');
+      setRoomType("");
+      setNumOfBeds("");
+      setStatus("available");
     } catch (error) {
-      console.error(error);
-      alert('Room registration failed');
+      console.error(error.response?.data || error.message);
+      alert("Room registration failed");
     }
   };
 
   return (
     <div className="container mt-5">
-      <h2 className="text-center mb-4">Owner Dashboard</h2>
+      <h2 className="text-center mb-4">Room Registration</h2>
       <form onSubmit={handleRoomRegistration} className="row g-3">
         <div className="col-md-6">
           <label className="form-label">Room Name</label>
@@ -131,6 +166,19 @@ const OwnerDashboard = () => {
             required
           />
         </div>
+        <div className="col-md-6">
+          <label className="form-label">Status</label>
+          <select
+            className="form-select"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            required
+          >
+            <option value="available">Available</option>
+            <option value="booked">Booked</option>
+            <option value="unavailable">Unavailable</option>
+          </select>
+        </div>
         <div className="col-12">
           <label className="form-label">Amenities</label>
           <textarea
@@ -157,4 +205,4 @@ const OwnerDashboard = () => {
   );
 };
 
-export default OwnerDashboard;
+export default RoomRegister;

@@ -14,7 +14,7 @@ const RoomsPage = () => {
   useEffect(() => {
     const fetchRooms = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/rooms');
+        const response = await axios.get('http://localhost:3000/api/rooms/all');
         // console.log(response.data);
         setRooms(response.data);
         setFilteredRooms(response.data);
@@ -64,8 +64,7 @@ const RoomsPage = () => {
 
   return (
     <div className="container mt-5">
-      <h2 className="text-center mb-4">All Rooms</h2>
-
+      {/* <h2 className="text-center mb-4">All Rooms</h2> */}
       {/* Search and Filters */}
       <div className="row mb-4">
         <div className="col-md-4">

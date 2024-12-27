@@ -1,20 +1,17 @@
-import { useState, useEffect,  useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { LoginContext } from "../../LandingSite/Auth/ContextProvider/Context";
-// import axios from 'axios';
 
 const Header = () => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const { logindata } = useContext(LoginContext);
 
-
-  useEffect(() => {
-  }, []);
+  useEffect(() => {}, []);
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -42,7 +39,8 @@ const Header = () => {
         <div className="container-fluid">
           <nav className="navbar navbar-expand-lg fixed-top d-flex justify-content-between px-5">
             <h1 className="navbar-brand mb-0">
-              Email: {logindata ? logindata.ValidUserOne.email : ""}
+              {/* Add fallback if logindata or ValidUserOne is undefined */}
+              Email: {logindata && logindata.ValidUserOne ? logindata.ValidUserOne.email : "No email available"}
             </h1>
             <div className="d-flex align-items-center">
               <IconButton

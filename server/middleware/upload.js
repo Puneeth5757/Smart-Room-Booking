@@ -1,4 +1,3 @@
-// middleware/upload.js
 const multer = require('multer');
 const path = require('path');
 
@@ -18,14 +17,14 @@ const fileFilter = (req, file, cb) => {
   if (mimetype && extname) {
     return cb(null, true);
   } else {
-    cb('Error: Images Only!');
+    cb(new Error('Images Only!'));
   }
 };
 
-// Initialize Multer
+// Increase file size limit (e.g., 5MB)
 const upload = multer({
   storage,
-  limits: { fileSize: 1000000 }, // 1MB file size limit
+  limits: { fileSize: 5000000 }, // 5MB file size limit
   fileFilter
 });
 

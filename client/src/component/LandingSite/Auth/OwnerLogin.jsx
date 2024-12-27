@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Container, Form, Button } from "react-bootstrap";
 import { NavLink, useNavigate } from "react-router-dom";
 import { auth, googleProvider, signInWithPopup } from "../../../firebase";
 import axios from "axios";
+import { LoginContext } from "../Auth/ContextProvider/Context";
 
 const OwnerLogin = () => {
   const [passShow, setPassShow] = useState(false);
@@ -12,6 +13,7 @@ const OwnerLogin = () => {
   });
 
   const history = useNavigate();
+  const { setLoginData } = useContext(LoginContext); // Access context to update owner data
 
   const setVal = (e) => {
     const { name, value } = e.target;
@@ -46,16 +48,17 @@ const OwnerLogin = () => {
       });
 
       const res = await data.json();
-      console.log(res);
-
       if (res.status === 201) {
         localStorage.setItem("ownersdatatoken", res.result.token);
         localStorage.setItem("authMethod", "token"); // Set the authentication method
+        setLoginData(res.result.userValid); // Update context with logged-in owner data
         history("/ownerdash");
         setInpval({
           email: "",
           password: "",
         });
+      } else {
+        alert(res.error || "Login failed!");
       }
     }
   };
@@ -69,7 +72,7 @@ const OwnerLogin = () => {
       localStorage.setItem("uid", owner.uid);
 
       // Perform login or registration
-      await axios.post("http://localhost:3000/api/g-owners/login", {
+      const response = await axios.post("http://localhost:3000/api/g-owners/login", {
         uid: owner.uid,
         ownername: owner.displayName,
         email: owner.email,
@@ -77,9 +80,13 @@ const OwnerLogin = () => {
         role: "owner",
       });
 
-      localStorage.setItem("authMethod", "google"); // Set the authentication method
-      alert("Signed in successfully");
-      history("/ownerdash");
+      if (response.status === 200) {
+        const ownerData = response.data;
+        setLoginData(ownerData); // Update context with logged-in owner data
+        localStorage.setItem("authMethod", "google"); // Set the authentication method
+        alert("Signed in successfully");
+        history("/ownerdash");
+      }
     } catch (error) {
       console.error("Error signing in with Google:", error);
       alert("Error signing in with Google: " + error.message);

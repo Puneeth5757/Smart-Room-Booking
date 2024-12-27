@@ -12,7 +12,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       if (authMethod === "google") {
-        const uid = localStorage.getItem("uid"); // Get the UID from localStorage for Google login
+        const uid = localStorage.getItem("uid"); 
         if (uid) {
           try {
             const response = await axios.get(`http://localhost:3000/api/g-owners/profile/${uid}`);
