@@ -36,7 +36,7 @@ router.post('/login', async (req, res) => {
 // GET route to fetch user's profile
 router.get("/User-profile/:uid", async (req, res) => {
   const { uid } = req.params;
-  console.log("Received request for UID:", uid);
+  // console.log("Received request for UID:", uid);
 
   try {
     const foundUser = await User.findOne({ uid }); // Rename variable to avoid conflict

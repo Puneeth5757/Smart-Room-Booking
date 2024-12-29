@@ -40,7 +40,7 @@ const Header = () => {
           <nav className="navbar navbar-expand-lg fixed-top d-flex justify-content-between px-5">
             <h1 className="navbar-brand mb-0">
               {/* Add fallback if logindata or ValidUserOne is undefined */}
-              Email: {logindata && logindata.ValidUserOne ? logindata.ValidUserOne.email : "No email available"}
+              Email: {logindata && logindata.ValidUserOne ? logindata.ValidUserOne.email : "Google-Account"}
             </h1>
             <div className="d-flex align-items-center">
               <IconButton

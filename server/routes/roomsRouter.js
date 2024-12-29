@@ -83,4 +83,50 @@ router.get('/all', async (req, res) => {
   }
 });
 
+router.put('/:id', async (req, res) => {
+  try {
+    const { bookedBy, status } = req.body;
+    const roomId = req.params.id;
+
+    // console.log('details:', bookedBy, ',',status, ',',roomId);
+
+    // Validate input
+    if (!bookedBy || !status) {
+      return res.status(400).json({ msg: 'bookedBy and status are required' });
+    }
+
+    // Validate `bookedBy` as an ObjectId
+    const isValidObjectId = mongoose.Types.ObjectId.isValid(bookedBy);
+    if (!isValidObjectId) {
+      return res.status(400).json({ msg: 'Invalid bookedBy format' });
+    }
+
+    // Update only the required fields
+    const updatedRoom = await Room.findByIdAndUpdate(
+      roomId,
+      {
+        $set: {
+          bookedBy: bookedBy,
+          status: status,
+        },
+      },
+      {
+        new: true, // Return the updated document
+        runValidators: true, // Validate the schema during update
+      }
+    );
+
+    // Check if room exists
+    if (!updatedRoom) {
+      return res.status(404).json({ msg: 'Room not found' });
+    }
+
+    res.status(200).json({ msg: 'Room updated successfully', room: updatedRoom });
+  } catch (error) {
+    console.error('Error updating room:', error);
+    res.status(500).json({ msg: 'Server error', error: error.message });
+  }
+});
+
+
 module.exports = router;
