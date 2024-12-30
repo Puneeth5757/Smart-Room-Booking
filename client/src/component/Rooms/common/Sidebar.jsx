@@ -18,7 +18,7 @@ const Sidebar = () => {
           </Link>
         </li>
         <li className="list-group-item">
-          <Link to={"/dashboard/User-profile"} className="text-decoration-none">
+          <Link to={"/dashboard/User-bookings"} className="text-decoration-none">
             <FaBookOpen className="icon me-2" /> Bookings
           </Link>
         </li>

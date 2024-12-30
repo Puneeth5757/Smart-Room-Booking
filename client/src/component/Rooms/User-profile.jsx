@@ -5,7 +5,6 @@ import Sidebar from "./common/Sidebar";
 
 const Profile = () => {
   const { logindata } = useContext(LoginContext);
-  const [authMethod] = useState(localStorage.getItem("authMethod"));
   const [isGoogleLogin] = useState(localStorage.getItem("isGoogleLogin"));
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
@@ -26,13 +25,13 @@ const Profile = () => {
         } else {
           setError("No UID found in localStorage");
         }
-      } else if (authMethod === "token") {
+      } else if (isGoogleLogin === "false") {
         setUserData(logindata?.ValidUserOne);
       }
     };
 
     fetchUserData();
-  }, [logindata, authMethod]);
+  }, [logindata]);
 
   if (error) {
     return <div className="alert alert-danger">{error}</div>;

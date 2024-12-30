@@ -15,6 +15,7 @@ import RoomRegister from "./component/Owners/RoomRegister";
 import RoomDash from "./component/Rooms/Dashboard";
 import RoomsPage from "./component/Rooms/RoomsPage";
 import UserProfile from "./component/Rooms/User-profile";
+import UserBookings from "./component/Rooms/UserBookings";
 
 
 function App() {
@@ -39,7 +40,7 @@ function App() {
       <Route path="dashboard" element={<RoomDash />}>
         <Route index element={<RoomsPage />} />
         <Route path="User-profile" element={<UserProfile />} />
-
+        <Route path="User-bookings" element={<UserBookings />} />
       </Route>
 
     </Routes>   

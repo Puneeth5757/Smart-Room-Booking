@@ -117,21 +117,13 @@ const Bookings = () => {
                           Booking Status:{" "}
                           {room.status === "booked"
                             ? "Booked"
-                            : room.status === "available"
-                            ? "Available"
                             : "Unavailable"}
                         </p>
                         {room.status === "booked" && room.bookedBy && (
                           <>
                             <p className="card-text">
                               <strong>Booked By:</strong>{" "}
-                              {room.bookedBy.name || "Unknown"}
-                            </p>
-                            <p className="card-text">
-                              <strong>Booking Date:</strong>{" "}
-                              {room.bookingTime
-                                ? new Date(room.bookingTime).toLocaleString()
-                                : "N/A"}
+                              {room.bookedBy || "Unknown"}
                             </p>
                             <p className="card-text">
                               <strong>Booking Period:</strong>{" "}
